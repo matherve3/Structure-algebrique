@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Fiche Interactive · Structures algébriques</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --bg: #0a0a1a; --surface: #13132b; --surface2: #1a1a35;
+            --primary: #818cf8; --primary-light: #a5b4fc; --text: #f1f5f9;
+            --text-secondary: #94a3b8; --border: #2d2d5e;
+            --success: #10b981; --danger: #ef4444; --info: #3b82f6;
+            --radius: 16px; --radius-sm: 12px;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: var(--bg);
+            background-image: radial-gradient(ellipse at 20% 30%, rgba(129,140,248,0.08) 0%, transparent 50%),
+                              radial-gradient(ellipse at 80% 70%, rgba(59,130,246,0.08) 0%, transparent 50%);
+            font-family: 'Inter', system-ui, sans-serif; min-height: 100vh;
+            display: flex; justify-content: center; padding: 1rem;
+        }
+        .container {
+            width: 100%; max-width: 850px; background: var(--surface);
+            border-radius: 28px; border: 1px solid var(--border);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            padding: 2rem 1.5rem; margin: 1rem 0;
+        }
+        h1 { text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 800; color: var(--primary-light); margin-bottom: 0.3rem; }
+        .subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem; }
+        .accordion { margin-bottom: 1rem; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+        .accordion-header {
+            background: var(--surface2); padding: 1rem 1.3rem;
+            font-weight: 700; font-size: 1.1rem; color: var(--text); cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: background 0.2s;
+        }
+        .accordion-header:hover { background: #252550; }
+        .accordion-header span { font-size: 1.2rem; color: var(--primary); }
+        .accordion-body {
+            background: #0c0c20; max-height: 0; overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+            color: var(--text-secondary); line-height: 1.7;
+        }
+        .accordion-body.open { max-height: 4000px; padding: 1.5rem 1.3rem; }
+        .accordion-body p { margin-bottom: 1rem; }
+        .accordion-body strong { color: var(--text); }
+        .property-box {
+            background: rgba(59,130,246,0.1); border-left: 4px solid var(--info);
+            padding: 0.8rem 1.2rem; border-radius: var(--radius-sm); margin: 1rem 0;
+        }
+        .property-box .title {
+            font-weight: 700; color: var(--info); margin-bottom: 0.4rem;
+            font-size: 1rem;
+        }
+        .formula {
+            background: rgba(129,140,248,0.08); border: 1px solid rgba(129,140,248,0.2);
+            padding: 0.4rem 1rem; border-radius: 8px; display: inline-block;
+            margin: 0.3rem 0; font-family: 'KaTeX_Main', serif;
+        }
+        .question-box {
+            background: var(--surface2); border-radius: var(--radius-sm);
+            padding: 1.2rem; margin-top: 1.5rem; border-left: 4px solid var(--primary);
+        }
+        .question-box p { margin-bottom: 0.5rem; }
+        .option-btn {
+            display: block; width: 100%; text-align: left; background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border); border-radius: 10px; padding: 0.7rem 1rem;
+            margin: 0.4rem 0; color: var(--text); cursor: pointer; font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .option-btn:hover:not(:disabled) { background: rgba(129,140,248,0.1); border-color: var(--primary); }
+        .option-btn.correct { background: #065f46; border-color: var(--success); font-weight: 600; }
+        .option-btn.wrong { background: #7f1d1d; border-color: var(--danger); font-weight: 600; }
+        .feedback { margin-top: 0.6rem; font-size: 0.9rem; font-weight: 600; }
+        .copyright { text-align: center; margin-top: 2.5rem; font-size: 0.75rem; color: var(--text-secondary); opacity: 0.7; }
+        @media (max-width: 500px) {
+            .container { padding: 1.2rem 0.8rem; }
+            h1 { font-size: 1.5rem; }
+            .accordion-header { padding: 0.8rem 1rem; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🏗️ Structures algébriques</h1>
+    <p class="subtitle">Fiche interactive complète · Terminale</p>
+
+    <!-- SECTION 1 : Groupes -->
+    <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            🔹 1. Groupes <span>▶</span>
+        </div>
+        <div class="accordion-body">
+            <p><strong>Définition :</strong> Un groupe $(G, \star)$ est un ensemble muni d'une loi de composition interne associative, possédant un élément neutre $e$ et où tout élément admet un symétrique.</p>
+            <div class="property-box">
+                <div class="title">📌 Exemples</div>
+                <p>$(\mathbb{Z},+)$ est un groupe abélien (commutatif).<br>
+                $(\mathbb{R}^*,\times)$ est un groupe abélien.<br>
+                $GL_n(\mathbb{R})$ (matrices inversibles) est un groupe non commutatif pour la multiplication.<br>
+                Le groupe symétrique $S_n$ (permutations) est non commutatif pour $n\ge 3$.</p>
+            </div>
+            <div class="property-box">
+                <div class="title">📌 Propriétés</div>
+                <p>Le neutre est unique. Le symétrique de $x$ est unique.<br>
+                Dans un groupe, tout élément est régulier : $ax = bx \Rightarrow a = b$.</p>
+            </div>
+            <div class="question-box" id="q1">
+                <p><strong>❓ Question 1 :</strong> $(\mathbb{N},+)$ est-il un groupe ?</p>
+                <button class="option-btn" onclick="checkAnswer('q1',0)">A. Oui, car l'addition est associative et $0$ est neutre.</button>
+                <button class="option-btn" onclick="checkAnswer('q1',1)">B. Non, car il n'y a pas de symétrique (opposé) dans $\mathbb{N}$.</button>
+                <button class="option-btn" onclick="checkAnswer('q1',2)">C. Oui, car $\mathbb{N}$ est inclus dans $\mathbb{Z}$ qui est un groupe.</button>
+                <div class="feedback" id="fb1"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 2 : Anneaux -->
+    <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            🔹 2. Anneaux <span>▶</span>
+        </div>
+        <div class="accordion-body">
+            <p><strong>Définition :</strong> Un anneau $(A,+,\times)$ est un ensemble muni de deux lois : $(A,+)$ est un groupe abélien, $\times$ est associative, distributive par rapport à $+$, et possède un élément neutre $1$ (anneau unitaire). Si $\times$ est commutative, l'anneau est commutatif.</p>
+            <div class="property-box">
+                <div class="title">📌 Exemples</div>
+                <p>$(\mathbb{Z},+,\times)$ est un anneau commutatif unitaire intègre.<br>
+                $(\mathbb{R}[X],+,\times)$ est un anneau commutatif.<br>
+                $(\mathcal{M}_n(\mathbb{R}),+,\times)$ est un anneau non commutatif (pour $n\ge2$).</p>
+            </div>
+            <div class="property-box">
+                <div class="title">📌 Divisibilité et idéaux</div>
+                <p>Dans un anneau intègre : $a$ divise $b$ s'il existe $c$ tel que $b = ac$.<br>
+                Un idéal $I$ est un sous-groupe additif tel que pour tout $a\in A, x\in I$, $ax \in I$.</p>
+            </div>
+            <div class="question-box" id="q2">
+                <p><strong>❓ Question 2 :</strong> Dans $(\mathbb{Z},+,\times)$, l'ensemble $2\mathbb{Z}$ (nombres pairs) est :</p>
+                <button class="option-btn" onclick="checkAnswer('q2',0)">A. Un sous-groupe additif seulement</button>
+                <button class="option-btn" onclick="checkAnswer('q2',1)">B. Un idéal</button>
+                <button class="option-btn" onclick="checkAnswer('q2',2)">C. Un sous-anneau</button>
+                <div class="feedback" id="fb2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 3 : Corps -->
+    <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            🔹 3. Corps <span>▶</span>
+        </div>
+        <div class="accordion-body">
+            <p><strong>Définition :</strong> Un corps $(\mathbb{K},+,\times)$ est un anneau commutatif unitaire où tout élément non nul admet un inverse pour la multiplication.</p>
+            <div class="property-box">
+                <div class="title">📌 Exemples</div>
+                <p>$\mathbb{Q}, \mathbb{R}, \mathbb{C}$ sont des corps.<br>
+                $\mathbb{Z}/p\mathbb{Z}$ (avec $p$ premier) est un corps fini.<br>
+                $\mathbb{Z}$ n'est pas un corps (2 n'a pas d'inverse dans $\mathbb{Z}$).</p>
+            </div>
+            <div class="property-box">
+                <div class="title">📌 Caractéristique</div>
+                <p>La caractéristique d'un corps est le plus petit entier $n>0$ tel que $n\cdot 1 = 0$, ou $0$ si aucun. Ex : $\mathbb{R}$ est de caractéristique $0$, $\mathbb{Z}/p\mathbb{Z}$ de caractéristique $p$.</p>
+            </div>
+            <div class="question-box" id="q3">
+                <p><strong>❓ Question 3 :</strong> Pourquoi $\mathbb{Z}$ n'est-il pas un corps ?</p>
+                <button class="option-btn" onclick="checkAnswer('q3',0)">A. Parce qu'il n'est pas commutatif.</button>
+                <button class="option-btn" onclick="checkAnswer('q3',1)">B. Parce que tous les éléments non nuls ne sont pas inversibles (ex : 2).</button>
+                <button class="option-btn" onclick="checkAnswer('q3',2)">C. Parce qu'il n'a pas d'élément neutre pour $+$.</button>
+                <div class="feedback" id="fb3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 4 : Espaces vectoriels et applications linéaires -->
+    <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            🔹 4. Espaces vectoriels & Applications linéaires <span>▶</span>
+        </div>
+        <div class="accordion-body">
+            <p><strong>Définition :</strong> Un $\mathbb{K}$-espace vectoriel $E$ est un ensemble muni d'une addition interne et d'une multiplication externe par les scalaires de $\mathbb{K}$, vérifiant les axiomes usuels.</p>
+            <div class="property-box">
+                <div class="title">📌 Bases et dimension</div>
+                <p>Une base de $E$ est une famille libre et génératrice. Tout espace vectoriel admet une base. La dimension est le cardinal d'une base (si fini).</p>
+                <p>Ex : $\mathbb{R}^n$ est de dimension $n$. L'ensemble des polynômes de degré $\le n$ est un espace vectoriel de dimension $n+1$.</p>
+            </div>
+            <div class="property-box">
+                <div class="title">📌 Applications linéaires</div>
+                <p>$f: E \to F$ est linéaire si $f(u+v)=f(u)+f(v)$ et $f(\lambda u)=\lambda f(u)$.<br>
+                Noyau : $\ker f = \{u \in E \mid f(u)=0\}$ (sous-espace de $E$).<br>
+                Image : $\operatorname{Im} f = f(E)$ (sous-espace de $F$).<br>
+                Théorème du rang : $\dim E = \dim \ker f + \dim \operatorname{Im} f$.</p>
+            </div>
+            <div class="question-box" id="q4">
+                <p><strong>❓ Question 4 :</strong> Dans $\mathbb{R}^3$, quelle est la dimension du sous-espace $F = \{(x,y,z) \mid x + y + z = 0\}$ ?</p>
+                <button class="option-btn" onclick="checkAnswer('q4',0)">A. $1$</button>
+                <button class="option-btn" onclick="checkAnswer('q4',1)">B. $2$</button>
+                <button class="option-btn" onclick="checkAnswer('q4',2)">C. $3$</button>
+                <div class="feedback" id="fb4"></div>
+            </div>
+        </div>
+    </div>
+
+    <p class="copyright">©️ MATHERVE · Fiches interactives Terminale</p>
+</div>
+
+<script>
+    const answers = {
+        q1: 1, // Non, pas de symétrique dans N
+        q2: 1, // 2Z est un idéal de Z
+        q3: 1, // 2 n'a pas d'inverse dans Z
+        q4: 1  // hyperplan de dimension 2
+    };
+
+    function toggleAccordion(header) {
+        const body = header.nextElementSibling;
+        body.classList.toggle('open');
+        const span = header.querySelector('span');
+        span.textContent = body.classList.contains('open') ? '▼' : '▶';
+        if (body.classList.contains('open')) {
+            renderMathInElement(body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+        }
+    }
+
+    function checkAnswer(questionId, chosen) {
+        const buttons = document.querySelectorAll(`#${questionId} .option-btn`);
+        buttons.forEach((btn, idx) => {
+            btn.classList.remove('correct', 'wrong');
+            btn.disabled = true;
+            if (idx === answers[questionId]) btn.classList.add('correct');
+            if (idx === chosen && chosen !== answers[questionId]) btn.classList.add('wrong');
+        });
+        const fb = document.getElementById('fb' + questionId.slice(1));
+        fb.textContent = chosen === answers[questionId]
+            ? '✅ Bonne réponse !'
+            : '❌ Réponse incorrecte. Relis la fiche ci-dessus.';
+        fb.style.color = chosen === answers[questionId] ? 'var(--success)' : 'var(--danger)';
+    }
+
+    renderMathInElement(document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "$", right: "$", display: false}
+        ]
+    });
+</script>
+</body>
+</html>
